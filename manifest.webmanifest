@@ -1,0 +1,14 @@
+{
+  "name": "FruitsNINE",
+  "short_name": "FruitsNINE",
+  "description": "Fruit puzzle: surround a fruit with eight different neighbours to clear them",
+  "lang": "en",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#FFE5B4",
+  "theme_color": "#FF6B9D",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

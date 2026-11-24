@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#FF6B9D">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <title>FruitsNINE</title>
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="gameScreen" class="screen">
+        <div class="game-container">
+            <header class="game-header">
+                <div class="header-top">
+                    <h1>FruitsNINE</h1>
+                    <div class="header-tools">
+                        <button type="button" class="btn-tool" data-action="howToPlay" data-i18n="howToPlay">How to Play</button>
+                        <div class="lang-toggle" role="group" data-i18n-aria="language">
+                            <button type="button" class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+                            <button type="button" class="lang-btn" data-lang="ko" aria-pressed="false">KO</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label" data-i18n="turns">Turns</span>
+                        <span id="moves" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" data-i18n="tiles">Tiles</span>
+                        <span id="remaining" class="stat-value">49</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" data-i18n="best">Best</span>
+                        <span id="best" class="stat-value">-</span>
+                    </div>
+                </div>
+                <div class="mode-toggle" role="group" data-i18n-aria="mode">
+                    <button type="button" class="mode-btn" data-mode="normal" aria-pressed="true" data-i18n="modeNormal">Normal</button>
+                    <button type="button" class="mode-btn" data-mode="hard" aria-pressed="false" data-i18n="modeHard">Hard</button>
+                </div>
+                </header>
+
+            <div id="status" class="sr-only" aria-live="polite"></div>
+
+            <div class="game-content">
+                <div class="stream-horizontal">
+                    <div class="stream-label" data-i18n="nextFruit">Next</div>
+                    <div class="stream-numbers" id="streamNumbers"></div>
+                </div>
+
+                <div class="board-wrapper">
+                    <div id="board" class="board"></div>
+                </div>
+
+                <div class="game-actions">
+                    <button id="restartBtn" type="button" class="btn-small" data-i18n="newGame">새 게임</button>
+                    <button id="recordsBtn" type="button" class="btn-small" data-i18n="records">기록 보기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="leaderboardScreen" class="screen hidden">
+        <div class="leaderboard-container">
+            <header class="leaderboard-header">
+                <div class="header-top">
+                    <h1 data-i18n="leaderboard">리더보드</h1>
+                    <div class="header-tools">
+                        <button type="button" class="btn-tool" data-action="howToPlay" data-i18n="howToPlay">How to Play</button>
+                        <div class="lang-toggle" role="group" data-i18n-aria="language">
+                            <button type="button" class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+                            <button type="button" class="lang-btn" data-lang="ko" aria-pressed="false">KO</button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="game-result" id="gameResult">
+                <h2 id="resultTitle">게임 종료</h2>
+                <div class="result-stats">
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="mode">Mode</span>
+                        <span id="finalMode" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="turns">Turns</span>
+                        <span id="finalMoves" class="result-value">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tilesLeft">Tiles Left</span>
+                        <span id="finalRemaining" class="result-value">0</span>
+                    </div>
+                </div>
+                <form id="nameForm" class="name-form hidden">
+                    <label for="playerName" data-i18n="nameLabel">이름을 입력해 기록을 저장하세요</label>
+                    <input id="playerName" type="text" maxlength="12" autocomplete="nickname" data-i18n-placeholder="namePlaceholder" placeholder="이름 (최대 12자)">
+                    <div class="name-actions">
+                        <button type="submit" class="btn btn-primary" data-i18n="saveRecord">기록 저장</button>
+                        <button id="skipScoreBtn" type="button" class="btn btn-secondary" data-i18n="saveAnon">익명으로 저장</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="leaderboard-list">
+                <h3 id="topRecordsTitle"></h3>
+                <p id="leaderboardStatus" class="leaderboard-status" aria-live="polite"></p>
+                <div id="leaderboardEntries" class="entries"></div>
+            </div>
+
+            <div class="leaderboard-actions">
+                <button id="newGameBtn" class="btn btn-primary" data-i18n="newGame">새 게임</button>
+                <button id="continueBtn" class="btn btn-secondary hidden" data-i18n="continue">계속하기</button>
+            </div>
+        </div>
+    </div>
+
+    <dialog id="howToPlayDialog" class="modal" aria-labelledby="howToPlayTitle">
+        <div class="modal-body">
+            <h2 id="howToPlayTitle" data-i18n="howToPlay">How to Play</h2>
+            <ul class="how-list">
+                <li><strong data-i18n="htpBoardTitle"></strong> <span data-i18n="htpBoard"></span></li>
+                <li><strong data-i18n="htpQueueTitle"></strong> <span data-i18n="htpQueue"></span></li>
+                <li><strong data-i18n="htpMatchTitle"></strong> <span data-i18n="htpMatch"></span></li>
+                <li><strong data-i18n="htpGoalTitle"></strong> <span data-i18n="htpGoal"></span></li>
+                <li><strong data-i18n="htpModeTitle"></strong> <span data-i18n="htpMode"></span></li>
+            </ul>
+            <button id="howToPlayClose" type="button" class="btn btn-primary" data-i18n="close">Close</button>
+        </div>
+    </dialog>
+
+    <script src="config.js"></script>
+    <script src="logic.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
